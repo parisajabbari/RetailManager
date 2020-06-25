@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using RMDesktopUI.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,13 @@ namespace RMDesktopUI.ViewModels
         //Private backing fields
         private string _userName;
         private string _password;
+        private IAPIHelper _apiHelper;
+        public LoginViewModel(IAPIHelper apiHelper)
+        {
+
+            _apiHelper = apiHelper;
+
+        }
 
         //Public properties
         public string UserName
@@ -51,9 +59,20 @@ namespace RMDesktopUI.ViewModels
 
         }
 
-        public void LogIn( )
+        public async Task LogIn( )
         {
-            Console.WriteLine();
+            try
+            {
+                var result = await _apiHelper.Authenticate(UserName, Password);
+                //Todo: here we need to put a bearer token so we know the info of the user like username and token.
+
+            }
+            catch (Exception ex)
+            {
+
+                //throw;
+                Console.WriteLine(ex.Message);
+            }        
         }
 
 
