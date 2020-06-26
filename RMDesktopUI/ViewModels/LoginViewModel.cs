@@ -44,6 +44,34 @@ namespace RMDesktopUI.ViewModels
             }
         }
 
+        public bool IsErrorVisible
+        {
+            get {
+                    bool output = false;
+                    if(_errorMessage?.Length > 0)
+                    {
+                        output = true;
+                    }
+                    return output; 
+                }
+
+        }
+
+        private string _errorMessage;
+        public string ErrorMessage
+        {
+            get { return _errorMessage; }
+            set {
+                //The order of commands matter here. As timing to chnage the error message and notifying
+                    _errorMessage = value;
+                    NotifyOfPropertyChange(() => ErrorMessage);
+                    NotifyOfPropertyChange(() => IsErrorVisible);
+                     
+                }
+        }
+
+
+
         public bool CanLogIn
         {
             get{
@@ -63,6 +91,7 @@ namespace RMDesktopUI.ViewModels
         {
             try
             {
+                ErrorMessage = "";
                 var result = await _apiHelper.Authenticate(UserName, Password);
                 //Todo: here we need to put a bearer token so we know the info of the user like username and token.
 
@@ -71,7 +100,7 @@ namespace RMDesktopUI.ViewModels
             {
 
                 //throw;
-                Console.WriteLine(ex.Message);
+                ErrorMessage = ex.Message;
             }        
         }
 
